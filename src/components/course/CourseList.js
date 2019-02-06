@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import CourseListRow from './CourseListRow';
 
-const CourseList = ({ courses }) => {
+const CourseList = ({ courses, onDelete }) => {
   return (
     <table className="table">
       <thead>
         <tr>
+          <th>&nbsp;</th>
           <th>&nbsp;</th>
           <th>Title</th>
           <th>Author</th>
@@ -15,7 +16,7 @@ const CourseList = ({ courses }) => {
       </thead>
       <tbody>
         {courses.map(course =>
-          <CourseListRow key={course.id} course={course} />
+          <CourseListRow key={course.id} course={course} onDelete={onDelete} />
         )}
       </tbody>
     </table>
@@ -23,7 +24,8 @@ const CourseList = ({ courses }) => {
 };
 
 CourseList.propTypes = {
-  courses: PropTypes.array.isRequired
+  courses: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default CourseList;

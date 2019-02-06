@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseList from './CourseList';
-import {browserHistory} from 'react-router';
+import { browserHistory } from 'react-router';
+import toastr from 'toastr';
 
 class CoursesPage extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.redirectToAddCoursePage.bind(this);
+    this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
+    this.deleteCourse = this.deleteCourse.bind(this);
   }
 
   courseRow(course, index) {
@@ -24,6 +26,16 @@ class CoursesPage extends Component {
     browserHistory.push('/course');
   }
 
+  deleteCourse(courseId) {
+    this.props.actions.deleteCourse(courseId)
+      .then(() => {
+        toastr.success('Course Deleted');
+      })
+      .catch((error) => {
+        toastr.error(error);
+      });
+  }
+
   render() {
     return (
       <div>
@@ -33,14 +45,15 @@ class CoursesPage extends Component {
           value="Add Course"
           className="btn btn-primary"
           onClick={this.redirectToAddCoursePage} />
-        <CourseList courses={this.props.courses} />
+        <CourseList courses={this.props.courses} onDelete={this.deleteCourse} />
       </div>
     );
   }
 }
 
 CoursesPage.propTypes = {
-  courses: PropTypes.array.isRequired
+  courses: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -49,8 +62,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(courseActions, dispatch);
-};
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(courseActions, dispatch)
+  };
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
