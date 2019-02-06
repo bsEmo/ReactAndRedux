@@ -45,7 +45,7 @@ class CoursesPage extends Component {
           value="Add Course"
           className="btn btn-primary"
           onClick={this.redirectToAddCoursePage} />
-        <CourseList courses={this.props.courses} onDelete={this.deleteCourse} />
+        {this.props.courses.length > 0 && <CourseList courses={this.props.courses} onDelete={this.deleteCourse} />}
       </div>
     );
   }
